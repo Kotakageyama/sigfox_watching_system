@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'jsuk665jb-syuy1ler+%-margi@gwh=9%^rq31c8dhl&x3o$e%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -129,8 +129,8 @@ LOGIN_REDIRECT_URL = 'dashboard:top'
 # メールをコンソールに表示する
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = ''
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'darshasilje@gmail.com'
+EMAIL_HOST_PASSWORD = 'youpzepkbnvrsife'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

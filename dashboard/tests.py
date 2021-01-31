@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 import json
 import requests
 
-url = "http:///receive_json/"
+url = "http://127.0.0.1:8000/receive_json/"
 sess = requests.session()
 
 print(sess.get(url))
