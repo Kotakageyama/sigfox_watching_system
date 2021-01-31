@@ -19,7 +19,7 @@ from .forms import (
 )
 import json
 from django.http.response import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 from .models import SigfoxData
 from django.utils import timezone
 import datetime
@@ -264,7 +264,7 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
             request.user.save()
             return super().get(request, **kwargs)
 
-@ensure_csrf_cookie
+@csrf_exempt
 def jsonReceive(request):
     if request.method == 'GET':
         return JsonResponse({})
