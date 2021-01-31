@@ -1,0 +1,339 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col-md-10">
+        <h1 class="text-secondary">{{user.first_name}}さんの部屋の様子</h1>
+    </div>
+    <div class="col-md-2 mt-2">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-secondary active">
+                <input type="radio" name="options" id="hour" value="hour" onchange="drawChart(this.value)" autocomplete="off" checked>24時間
+            </label>
+            <label class="btn btn-outline-secondary">
+                <input type="radio" name="options" id="day" value="day" onchange="drawChart(this.value)" autocomplete="off">7日
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">温度</h2>
+        <canvas id="temp"></canvas>
+    </div>
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">湿度</h2>
+        <canvas id="humid"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">照度</h2>
+        <canvas id="light"></canvas>
+    </div>
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">騒音</h2>
+        <canvas id="sound"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">電池</h2>
+        <canvas id="butt"></canvas>
+    </div>
+</div>
+
+<script>
+var labels = {{ labels_list | safe }};
+var temp = {{ temp_list }};
+var humid = {{ humid_list }};
+
+var labels_week = {{ labels_week_list | safe }};
+var temp_week = {{ temp_week_list }};
+var humid_week = {{ humid_week_list }};
+
+
+drawTempChart();
+drawHumidChart();
+
+function drawChart(value){
+    if (value == "hour"){
+        temp_chart.destroy();
+        humid_chart.destroy();
+        setData();
+        drawTempChart();
+        drawHumidChart();
+    } else if (value == "day"){
+        temp_chart.destroy();
+        humid_chart.destroy();
+        setData();
+        drawTempWeekChart();
+        drawHumidWeekChart();
+    }
+}
+
+function setData() {
+    var labels = [];
+    var temp = [];
+    var humid = [];
+    var labels_week = [];
+    var temp_week = [];
+    var humid_week = [];
+    var labels = {{ labels_list | safe }};
+    var temp = {{ temp_list }};
+    var humid = {{ humid_list }};
+    var labels_week = {{ labels_week_list | safe }};
+    var temp_week = {{ temp_week_list }};
+    var humid_week = {{ humid_week_list }};
+}
+
+// グラフ描画処理
+function drawTempChart() {
+    var ctx = document.getElementById("temp").getContext("2d");
+    window.temp_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "温度(度)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: temp
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  '度'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+function drawHumidChart() {
+    var ctx = document.getElementById("humid").getContext("2d");
+    window.humid_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "湿度(%)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: humid
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  '%'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+
+function drawTempWeekChart() {
+    var ctx = document.getElementById("temp").getContext("2d");
+    window.temp_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels_week,
+          datasets: [{
+            label: "温度(度)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: temp_week
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'day'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  '度'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+function drawHumidWeekChart() {
+    var ctx = document.getElementById("humid").getContext("2d");
+    window.humid_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels_week,
+          datasets: [{
+            label: "湿度(%)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: humid_week
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'day'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  '%'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+</script>
+
+<script>
+  var ctx = document.getElementById("light");
+  var light = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '照度(lux)',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '照度'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  'lux'
+            }
+          }
+        }]
+      },
+    }
+  });
+  var ctx = document.getElementById("sound");
+  var sound = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '騒音',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '騒音'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  '度'
+            }
+          }
+        }]
+      },
+    }
+  });
+  var ctx = document.getElementById("butt");
+  var butt = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '電池(mA）',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '電池'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  'mA'
+            }
+          }
+        }]
+      },
+    }
+  });
+</script>
+{% else %}
+さあ、始めましょう。
+{% endif %}
+{% endblock %}

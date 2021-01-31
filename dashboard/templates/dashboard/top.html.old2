@@ -1,0 +1,262 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col-md-10">
+        <h1 class="text-secondary">{{user.first_name}}さんの部屋の様子</h1>
+    </div>
+    <div class="col-md-2 mt-2">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-secondary active">
+                <input type="radio" name="options" id="hour" autocomplete="off" checked>1時間
+            </label>
+            <label class="btn btn-outline-secondary">
+                <input type="radio" name="options" id="day" autocomplete="off">1日
+            </label>
+        </div>
+    </div>
+</div>
+<div>
+    {{ labels_list }}{{ temp_list }}{{ data }}
+</div>
+
+<canvas id="my-graph" width="800" height="450"></canvas>
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">温度</h2>
+        <canvas id="temp"></canvas>
+    </div>
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">湿度</h2>
+        <canvas id="humid"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">照度</h2>
+        <canvas id="light"></canvas>
+    </div>
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">騒音</h2>
+        <canvas id="sound"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mt-3">
+        <h2 class="text-secondary">電池</h2>
+        <canvas id="butt"></canvas>
+    </div>
+</div>
+<script>
+var ctx = document.getElementById('my-graph').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        datasets: [{
+            label: 'distribution - linear',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false,
+            data: [{
+                x: '1995-12-13T00:00:00',
+                y: 1
+            }, {
+                x: '1995-12-18T00:00:00',
+                y: 10
+            }, {
+                x: '1995-12-21T00:00:00',
+                y: 20
+            }, {
+                x: '1995-12-25T12:00:00',
+                y: 30
+            }, {
+                x: '1996-01-01T00:00:00',
+                y: 40
+            }]
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'time',
+                //! distribution に linear を指定
+                distribution: 'linear',
+                time: {
+                    unit: 'day'
+                }
+            }]
+        }
+    }
+});
+</script>
+
+<script>
+    var labels = {{ labels_list | safe }};
+    var values = {{ temp_list }};
+    var ctx = document.getElementById("temp").getContext("2d");
+    var temp = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "温度(度)",
+            fill: false,
+            borderColor: 'rgba(0, 0, 255, 0.5)',
+            data: values
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }]
+          }
+        }
+    });
+</script>
+<script>
+var ctx = document.getElementById("humid");
+  var humid = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日','8月7日'],
+      datasets: [
+        {
+          label: '湿度(%）',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '湿度'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 60,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  '%'
+            }
+          }
+        }]
+      },
+    }
+  });
+  var ctx = document.getElementById("light");
+  var light = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '照度(lux)',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '照度'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  'lux'
+            }
+          }
+        }]
+      },
+    }
+  });
+  var ctx = document.getElementById("sound");
+  var sound = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '騒音',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '騒音'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  '度'
+            }
+          }
+        }]
+      },
+    }
+  });
+  var ctx = document.getElementById("butt");
+  var butt = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
+      datasets: [
+        {
+          label: '電池(mA）',
+          data: [35, 34, 37, 35, 34, 35, 34, 25],
+          borderColor: "rgba(255,0,0,1)",
+          backgroundColor: "rgba(0,0,0,0)"
+        },
+      ],
+    },
+    options: {
+      title: {
+        display: true,
+        text: '電池'
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            suggestedMax: 40,
+            suggestedMin: 0,
+            stepSize: 10,
+            callback: function(value, index, values){
+              return  value +  'mA'
+            }
+          }
+        }]
+      },
+    }
+  });
+</script>
+{% else %}
+さあ、始めましょう。
+{% endif %}
+{% endblock %}

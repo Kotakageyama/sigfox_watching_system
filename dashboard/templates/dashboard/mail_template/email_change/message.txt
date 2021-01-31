@@ -1,0 +1,5 @@
+下記URLよりサイトにアクセスすると、メールアドレスの変更が完了します。
+
+{{ protocol}}://{{ domain }}{% url 'dashboard:email_change_complete' token %}
+
+ほにゃらら
