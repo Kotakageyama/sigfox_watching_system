@@ -51,9 +51,15 @@ class Top(generic.TemplateView):
             #'labels_list': datas_list[0].date,
             'temp_list': [i.temp for i in datas_list],
             'humid_list': [i.humid for i in datas_list],
+            'light_list': [i.light for i in datas_list],
+            'sound_list': [i.sound for i in datas_list],
+            'butt_list': [i.butt for i in datas_list],
             'labels_week_list': [timezone.localtime(i.date).strftime("%Y-%m-%d %H:%M:%S") for i in datas_week_list],
             'temp_week_list': [i.temp for i in datas_week_list],
             'humid_week_list': [i.humid for i in datas_week_list],
+            'light_week_list': [i.light for i in datas_week_list],
+            'sound_week_list': [i.sound for i in datas_week_list],
+            'butt_week_list': [i.butt for i in datas_week_list],
         }
         #print(start_date,end_date)
         print(context)

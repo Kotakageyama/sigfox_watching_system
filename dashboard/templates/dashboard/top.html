@@ -48,28 +48,50 @@
 var labels = {{ labels_list | safe }};
 var temp = {{ temp_list }};
 var humid = {{ humid_list }};
+var light = {{ light_list }};
+var sound = {{ sound_list }};
+var butt = {{ butt_list }};
 
 var labels_week = {{ labels_week_list | safe }};
 var temp_week = {{ temp_week_list }};
 var humid_week = {{ humid_week_list }};
-
+var light_week = {{ light_week_list }};
+var sound_week = {{ sound_week_list }};
+var butt_week = {{ butt_week_list }};
 
 drawTempChart();
 drawHumidChart();
+drawLightChart();
+drawSoundChart();
+drawButtChart();
 
 function drawChart(value){
     if (value == "hour"){
         temp_chart.destroy();
         humid_chart.destroy();
+        light_chart.destroy();
+        sound_chart.destroy();
+        butt_chart.destroy();
+
         setData();
+
         drawTempChart();
         drawHumidChart();
+        drawLightChart();
+        drawSoundChart();
+        drawButtChart();
     } else if (value == "day"){
         temp_chart.destroy();
         humid_chart.destroy();
+        light_chart.destroy();
+        sound_chart.destroy();
+        butt_chart.destroy();
         setData();
         drawTempWeekChart();
         drawHumidWeekChart();
+        drawLightWeekChart();
+        drawSoundWeekChart();
+        drawButtWeekChart();
     }
 }
 
@@ -77,15 +99,27 @@ function setData() {
     var labels = [];
     var temp = [];
     var humid = [];
+    var light = [];
+    var sound = [];
+    var butt = [];
     var labels_week = [];
     var temp_week = [];
     var humid_week = [];
+    var light_week = [];
+    var sound_week = [];
+    var butt_week = [];
     var labels = {{ labels_list | safe }};
     var temp = {{ temp_list }};
     var humid = {{ humid_list }};
+    var light = {{ light_list }};
+    var sound = {{ sound_list }};
+    var butt = {{ butt_list }};
     var labels_week = {{ labels_week_list | safe }};
     var temp_week = {{ temp_week_list }};
     var humid_week = {{ humid_week_list }};
+    var light_week = {{ light_week_list }};
+    var sound_week = {{ sound_week_list }};
+    var butt_week = {{ butt_week_list }};
 }
 
 // グラフ描画処理
@@ -152,6 +186,111 @@ function drawHumidChart() {
                 ticks: {
                 callback: function(value, index, values){
                     return  value +  '%'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+function drawLightChart() {
+    var ctx = document.getElementById("light").getContext("2d");
+    window.light_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "照度(lux)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: light
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'lux'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+function drawSoundChart() {
+    var ctx = document.getElementById("sound").getContext("2d");
+    window.sound_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "騒音(dB)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: sound
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'dB'
+                }
+                }
+            }]
+          }
+        }
+    });
+}
+function drawButtChart() {
+    var ctx = document.getElementById("butt").getContext("2d");
+    window.butt_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "電池(mA)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: sound
+          }],
+        },
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'hour'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'mA'
                 }
                 }
             }]
@@ -230,108 +369,111 @@ function drawHumidWeekChart() {
         }
     });
 }
-</script>
-
-<script>
-  var ctx = document.getElementById("light");
-  var light = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
-      datasets: [
-        {
-          label: '照度(lux)',
-          data: [35, 34, 37, 35, 34, 35, 34, 25],
-          borderColor: "rgba(255,0,0,1)",
-          backgroundColor: "rgba(0,0,0,0)"
+function drawLightWeekChart() {
+    var ctx = document.getElementById("light").getContext("2d");
+    window.light_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels_week,
+          datasets: [{
+            label: "照度(lux)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: light_week
+          }],
         },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: '照度'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            suggestedMax: 40,
-            suggestedMin: 0,
-            stepSize: 10,
-            callback: function(value, index, values){
-              return  value +  'lux'
-            }
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'day'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'lux'
+                }
+                }
+            }]
           }
-        }]
-      },
-    }
-  });
-  var ctx = document.getElementById("sound");
-  var sound = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
-      datasets: [
-        {
-          label: '騒音',
-          data: [35, 34, 37, 35, 34, 35, 34, 25],
-          borderColor: "rgba(255,0,0,1)",
-          backgroundColor: "rgba(0,0,0,0)"
+        }
+    });
+}
+function drawSoundWeekChart() {
+    var ctx = document.getElementById("sound").getContext("2d");
+    window.sound_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels_week,
+          datasets: [{
+            label: "騒音(dB)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: sound_week
+          }],
         },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: '騒音'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            suggestedMax: 40,
-            suggestedMin: 0,
-            stepSize: 10,
-            callback: function(value, index, values){
-              return  value +  '度'
-            }
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'day'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'dB'
+                }
+                }
+            }]
           }
-        }]
-      },
-    }
-  });
-  var ctx = document.getElementById("butt");
-  var butt = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['8月1日', '8月2日', '8月3日', '8月4日', '8月5日', '8月6日', '8月7日'],
-      datasets: [
-        {
-          label: '電池(mA）',
-          data: [35, 34, 37, 35, 34, 35, 34, 25],
-          borderColor: "rgba(255,0,0,1)",
-          backgroundColor: "rgba(0,0,0,0)"
+        }
+    });
+}
+function drawButtWeekChart() {
+    var ctx = document.getElementById("butt").getContext("2d");
+    window.butt_chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels_week,
+          datasets: [{
+            label: "電池(mA)",
+            fill: false,
+            borderColor: 'rgba(108, 117, 125, 0.5)',
+            data: butt_week
+          }],
         },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: '電池'
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            suggestedMax: 40,
-            suggestedMin: 0,
-            stepSize: 10,
-            callback: function(value, index, values){
-              return  value +  'mA'
-            }
+        options: {
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'day'
+              }
+            }],
+            yAxes: [{
+                ticks: {
+                callback: function(value, index, values){
+                    return  value +  'mA'
+                }
+                }
+            }]
           }
-        }]
-      },
-    }
-  });
+        }
+    });
+}
 </script>
 {% else %}
 さあ、始めましょう。
