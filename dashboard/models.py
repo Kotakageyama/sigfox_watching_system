@@ -41,6 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    device_name = models.CharField(max_length=20, default='test')
 
     is_staff = models.BooleanField(
         _('staff status'),
@@ -85,6 +86,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def username(self):
         return self.email
+
+    def get_device_name(self):
+        """Return the short name for the user."""
+        return self.device_name
 
 class SigfoxData(models.Model):
     device = models.CharField(max_length=20,default='test')

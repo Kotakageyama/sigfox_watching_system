@@ -20,12 +20,11 @@ from .forms import (
 import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import SigfoxData
+from .models import SigfoxData, User
 from django.utils import timezone
 import datetime
 
-User = get_user_model()
-
+mainUser = User();
 
 class Top(generic.TemplateView):
     template_name = 'dashboard/top.html'
@@ -37,8 +36,9 @@ class Top(generic.TemplateView):
         #start_date = timezone.now().date()
         end_date = start_date - timezone.timedelta(days=1)
         end_week = start_date - timezone.timedelta(weeks=1)
-        datas_list = SigfoxData.objects.filter(date__range=(end_date,start_date)).order_by('date')
-        datas_week_list = SigfoxData.objects.filter(date__range=(end_week,start_date)).order_by('date')
+
+        datas_list = SigfoxData.objects.filter(date__range=(end_date,start_date), device=mainUser.get_device_name()).order_by('date')
+        datas_week_list = SigfoxData.objects.filter(date__range=(end_week,start_date), device=mainUser.get_device_name()).order_by('date')
         # temp_list = SigfoxData.objects.filter(date__range=(start_date, end_date)).order_by('date')
         # humid_list = SigfoxData.objects.filter(date__range=(start_date, end_date)).order_by('date')
 
@@ -63,6 +63,8 @@ class Top(generic.TemplateView):
         }
         #print(start_date,end_date)
         print(context)
+        print(3)
+        print(mainUser.get_device_name())
         return render(request, 'dashboard/top.html', context)
 
 
@@ -285,7 +287,7 @@ def jsonReceive(request):
     sound = float(int(data[12:16],16))/100
     butt = float(int(data[16:20],16))/100
     # requestには、param1,param2の変数がpostされたものとする
-    ret = {"device": str(device), "data": "temp:" + str(temp) + ", humid:" + str(humid), "alldata": str(temp) + str(humid) + str(light) + str(sound) +str(butt)}
+    ret = {"device": device, "data": "temp:" + str(temp) + ", humid:" + str(humid), "alldata": str(temp) + str(humid) + str(light) + str(sound) +str(butt)}
 
     sgfx = SigfoxData()
     sgfx.device = device
